@@ -5,6 +5,7 @@ import com.example.TDTVSystem.DTO.Response.ResponseData;
 import com.example.TDTVSystem.Repository.ClassRepository;
 import com.example.TDTVSystem.Service.Imp.ClassServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,12 @@ public class ClassController {
 
     @PostMapping("/addClass")
     public boolean addClass ( @RequestParam String description) {
-        boolean isSuccess = classServiceImp.addClass(description);
-        return isSuccess;
+        return classServiceImp.addClass(description);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllClasses()
+    {
+        return  new ResponseEntity<>(classServiceImp.classList(), HttpStatus.OK);
     }
 }
