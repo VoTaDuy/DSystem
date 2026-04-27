@@ -3,6 +3,8 @@ package com.example.TDTVSystem.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "subjects")
 public class Subjects {
@@ -18,6 +20,10 @@ public class Subjects {
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Classes classes;
+
+
+    @OneToMany(mappedBy = "subjects")
+    List<Lessons> lessonsList;
 
 
     public Integer getSubjectId() {
@@ -42,5 +48,13 @@ public class Subjects {
 
     public void setClasses(Classes classes) {
         this.classes = classes;
+    }
+
+    public List<Lessons> getLessonsList() {
+        return lessonsList;
+    }
+
+    public void setLessonsList(List<Lessons> lessonsList) {
+        this.lessonsList = lessonsList;
     }
 }
