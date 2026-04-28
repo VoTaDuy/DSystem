@@ -11,5 +11,9 @@ public interface LessonServiceImp {
 
     List<LessonResponse> getLessonBySubject(int subjectId);
 
+    Lessons updateLesson(int lessonId, String lessonName);
+
+    void deleteLesson(int lessonId);
+
 
 }

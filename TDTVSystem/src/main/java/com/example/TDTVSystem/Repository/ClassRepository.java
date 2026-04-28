@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ClassRepository extends JpaRepository<Classes, Integer> {
     Classes findClassesByDescription(String description);
+
 }

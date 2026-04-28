@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface LessonRepository extends JpaRepository<Lessons, Integer> {
     Lessons findLessonByLessonName(String lessonName);
 
+    Lessons findLessonByLessonId(int lessonId);
+
 
 }
