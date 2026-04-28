@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -38,6 +39,8 @@ public class Users {
     @JoinColumn(name ="role_id")
     private Roles roles;
 
+    @OneToMany(mappedBy = "users")
+    List<UserExam> userExamList;
 
     public Integer getUserId() {
         return userId;
@@ -101,5 +104,13 @@ public class Users {
 
     public void setRoles(Roles roles) {
         this.roles = roles;
+    }
+
+    public List<UserExam> getUserExamList() {
+        return userExamList;
+    }
+
+    public void setUserExamList(List<UserExam> userExamList) {
+        this.userExamList = userExamList;
     }
 }

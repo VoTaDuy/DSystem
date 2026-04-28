@@ -37,6 +37,9 @@ public class Exam {
     @OneToMany(mappedBy = "exams")
     List<Questions> questionsList;
 
+    @OneToMany(mappedBy = "exams")
+    List<UserExam> userExamList;
+
     public Integer getExamId() {
         return examId;
     }
@@ -99,5 +102,13 @@ public class Exam {
 
     public void setQuestionsList(List<Questions> questionsList) {
         this.questionsList = questionsList;
+    }
+
+    public List<UserExam> getUserExamList() {
+        return userExamList;
+    }
+
+    public void setUserExamList(List<UserExam> userExamList) {
+        this.userExamList = userExamList;
     }
 }
