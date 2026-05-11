@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../layouts/AuthLayout";
+import { postData } from "../services/api";
 
 /* ─── Inline SVG Icons ──────────────────────────────────────────────────── */
 const UserIcon = () => (
@@ -30,7 +31,49 @@ const EyeOnIcon = () => (
 );
 
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
   const [showPw, setShowPw] = useState(false);
+  
+  // Form states
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!username || !password) {
+      setError("Vui lòng nhập tên đăng nhập và mật khẩu.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Backend expects @RequestParam for login, so we send as query params
+      const response = await postData<any>(
+        `/auth/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+        {}
+      );
+
+      if (response && response.success) {
+        // Lưu token
+        if (response.data && response.data.token) {
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("username", response.data.username);
+        }
+        // Chuyển hướng
+        navigate("/explore");
+      } else {
+        setError(response?.data || "Sai tên đăng nhập hoặc mật khẩu.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Lỗi kết nối tới máy chủ.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AuthLayout>
@@ -47,13 +90,21 @@ const LoginPage: React.FC = () => {
       <h2 className="auth-heading">Chào mừng trở lại!</h2>
       <p className="auth-subheading">Tiếp tục hành trình khám phá tri thức của bạn ngay hôm nay.</p>
 
-      <form>
+      {error && <div style={{ color: "red", marginBottom: "16px", fontSize: "14px" }}>{error}</div>}
+
+      <form onSubmit={handleLogin}>
         {/* Email */}
         <div className="auth-field">
           <label className="auth-label">Tên đăng nhập hoặc Email</label>
           <div className="auth-input-wrap">
             <span className="auth-input-icon"><UserIcon /></span>
-            <input className="auth-input" type="text" placeholder="Nhập email của bạn" />
+            <input 
+              className="auth-input" 
+              type="text" 
+              placeholder="Nhập tên đăng nhập" 
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
         </div>
 
@@ -61,11 +112,17 @@ const LoginPage: React.FC = () => {
         <div className="auth-field">
           <div className="auth-field-label-row">
             <label className="auth-label">Mật khẩu</label>
-            <a href="#" className="auth-forgot">Quên mật khẩu?</a>
+            <Link to="#" className="auth-forgot">Quên mật khẩu?</Link>
           </div>
           <div className="auth-input-wrap">
             <span className="auth-input-icon"><LockIcon /></span>
-            <input className="auth-input" type={showPw ? "text" : "password"} placeholder="••••••••" />
+            <input 
+              className="auth-input" 
+              type={showPw ? "text" : "password"} 
+              placeholder="••••••••" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <button type="button" className="auth-input-eye" onClick={() => setShowPw(!showPw)}>
               {showPw ? <EyeOnIcon /> : <EyeOffIcon />}
             </button>
@@ -78,7 +135,9 @@ const LoginPage: React.FC = () => {
           <label htmlFor="remember">Ghi nhớ đăng nhập</label>
         </div>
 
-        <button type="button" className="auth-btn">Đăng nhập</button>
+        <button type="submit" className="auth-btn" disabled={loading}>
+          {loading ? "Đang xử lý..." : "Đăng nhập"}
+        </button>
       </form>
 
       {/* Divider */}

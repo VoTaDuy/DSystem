@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import aboutCrateImage from "../assets/Screenshot 2026-04-23 215434.png";
 import aboutPhotoImage from "../assets/Screenshot 2026-04-23 215443.png";
 
@@ -167,12 +168,12 @@ function AboutPage() {
             bản tốt nhất của chính mình.
           </p>
           <div className="about-hero-actions">
-            <a className="button button-primary" href="#about-journey">
+            <Link className="button button-primary" to="#about-journey">
               Bắt đầu hành trình
-            </a>
-            <a className="button button-secondary" href="#about-journey">
+            </Link>
+            <Link className="button button-secondary" to="#about-journey">
               Tìm hiểu thêm
-            </a>
+            </Link>
           </div>
 
           <div className="about-hero-mark about-hero-mark-left" aria-hidden="true">
@@ -282,9 +283,9 @@ function AboutPage() {
                 lý học.
               </p>
             </div>
-            <a className="about-team-link" href="/">
+            <Link className="about-team-link" to="/">
               Khám phá đội ngũ của chúng tôi
-            </a>
+            </Link>
           </div>
 
           <div className="about-team-grid">
@@ -326,12 +327,12 @@ function AboutPage() {
                 hứng ngay hôm nay.
               </p>
               <div className="about-cta-actions">
-                <a className="button about-cta-button-primary" href="/">
+                <Link className="button about-cta-button-primary" to="/">
                   Gia nhập ngay
-                </a>
-                <a className="button about-cta-button-secondary" href="/">
+                </Link>
+                <Link className="button about-cta-button-secondary" to="/">
                   Đặt lịch tư vấn
-                </a>
+                </Link>
               </div>
             </div>
           </div>

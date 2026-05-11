@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../layouts/AuthLayout";
+import { postData } from "../services/api";
 
 /* ─── Inline SVG Icons ──────────────────────────────────────────────────── */
 const UserIcon = () => (
@@ -42,8 +43,53 @@ const EyeOnIcon = () => (
 );
 
 const SignUpPage: React.FC = () => {
+  const navigate = useNavigate();
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  // Form states
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!username || !email || !password) {
+      setError("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Mật khẩu xác nhận không khớp.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await postData<any>("/auth/register", {
+        username,
+        email,
+        password,
+        roleId: 1, // Default user role
+      });
+
+      if (response && response.success) {
+        // Đăng ký thành công, chuyển tới trang đăng nhập
+        navigate("/login");
+      } else {
+        setError(response?.data || "Đăng ký thất bại. Tên đăng nhập có thể đã tồn tại.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Đã xảy ra lỗi khi kết nối với máy chủ.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AuthLayout>
@@ -60,13 +106,21 @@ const SignUpPage: React.FC = () => {
       <h2 className="auth-heading">Tạo tài khoản mới</h2>
       <p className="auth-subheading">Khởi đầu trải nghiệm học tập khác biệt ngay hôm nay.</p>
 
-      <form>
+      {error && <div style={{ color: "red", marginBottom: "16px", fontSize: "14px" }}>{error}</div>}
+
+      <form onSubmit={handleRegister}>
         {/* Họ và tên */}
         <div className="auth-field">
           <label className="auth-label">Họ và tên</label>
           <div className="auth-input-wrap">
             <span className="auth-input-icon"><UserIcon /></span>
-            <input className="auth-input" type="text" placeholder="Nguyễn Văn A" />
+            <input 
+              className="auth-input" 
+              type="text" 
+              placeholder="Nguyễn Văn A" 
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
         </div>
 
@@ -75,7 +129,13 @@ const SignUpPage: React.FC = () => {
           <label className="auth-label">Địa chỉ Email</label>
           <div className="auth-input-wrap">
             <span className="auth-input-icon"><MailIcon /></span>
-            <input className="auth-input" type="email" placeholder="email@vi-du.com" />
+            <input 
+              className="auth-input" 
+              type="email" 
+              placeholder="email@vi-du.com" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
         </div>
 
@@ -85,7 +145,13 @@ const SignUpPage: React.FC = () => {
             <label className="auth-label">Mật khẩu</label>
             <div className="auth-input-wrap">
               <span className="auth-input-icon"><LockIcon /></span>
-              <input className="auth-input" type={showPw ? "text" : "password"} placeholder="••••••••" />
+              <input 
+                className="auth-input" 
+                type={showPw ? "text" : "password"} 
+                placeholder="••••••••" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <button type="button" className="auth-input-eye" onClick={() => setShowPw(!showPw)}>
                 {showPw ? <EyeOnIcon /> : <EyeOffIcon />}
               </button>
@@ -96,7 +162,13 @@ const SignUpPage: React.FC = () => {
             <label className="auth-label">Xác nhận</label>
             <div className="auth-input-wrap">
               <span className="auth-input-icon"><ShieldIcon /></span>
-              <input className="auth-input" type={showConfirm ? "text" : "password"} placeholder="••••••••" />
+              <input 
+                className="auth-input" 
+                type={showConfirm ? "text" : "password"} 
+                placeholder="••••••••" 
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
               <button type="button" className="auth-input-eye" onClick={() => setShowConfirm(!showConfirm)}>
                 {showConfirm ? <EyeOnIcon /> : <EyeOffIcon />}
               </button>
@@ -104,8 +176,8 @@ const SignUpPage: React.FC = () => {
           </div>
         </div>
 
-        <button type="button" className="auth-btn" style={{ marginTop: "12px" }}>
-          Đăng ký tài khoản
+        <button type="submit" className="auth-btn" style={{ marginTop: "12px" }} disabled={loading}>
+          {loading ? "Đang xử lý..." : "Đăng ký tài khoản"}
         </button>
       </form>
 

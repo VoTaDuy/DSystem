@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const exploreGrades = [
   {
     grade: "Lớp 6",
@@ -70,12 +72,12 @@ function ExplorePage() {
               tư duy thông qua hình ảnh trực quan và thử thách đầy cảm hứng.
             </p>
             <div className="explore-actions">
-              <a className="button button-primary" href="#explore-levels">
+              <Link className="button button-primary" to="#explore-levels">
                 Bắt đầu hành trình
-              </a>
-              <a className="button button-secondary" href="#explore-levels">
+              </Link>
+              <Link className="button button-secondary" to="#explore-levels">
                 Xem video
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -101,9 +103,9 @@ function ExplorePage() {
                 Lộ trình được thiết kế chuẩn trọng tâm chương trình phổ thông.
               </p>
             </div>
-            <a className="explore-view-all" href="/">
+            <Link className="explore-view-all" to="/">
               Xem tất cả
-            </a>
+            </Link>
           </div>
 
           <div className="explore-level-grid">
@@ -118,7 +120,7 @@ function ExplorePage() {
                 <p>{item.description}</p>
                 <div className="explore-level-meta">
                   <span>{item.count}</span>
-                  <a href="/">›</a>
+                  <Link to="/">›</Link>
                 </div>
               </article>
             ))}
@@ -147,9 +149,9 @@ function ExplorePage() {
                   Giải 3 bài toán logic để mở khóa huy hiệu hiếm và điểm thưởng
                   XP. Bạn đã sẵn sàng?
                 </p>
-                <a className="explore-feature-button" href="/">
+                <Link className="explore-feature-button" to="/">
                   Mở hộp ngay
-                </a>
+                </Link>
               </div>
             </article>
 
@@ -171,7 +173,7 @@ function ExplorePage() {
                 </div>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
-                <a href="/">Chơi ngay</a>
+                <Link to="/">Chơi ngay</Link>
               </article>
             ))}
           </div>
@@ -193,12 +195,12 @@ function ExplorePage() {
               </p>
             </div>
             <div className="explore-cta-actions">
-              <a className="button explore-cta-primary" href="/">
+              <Link className="button explore-cta-primary" to="/">
                 Bắt đầu ngay
-              </a>
-              <a className="button explore-cta-secondary" href="/">
+              </Link>
+              <Link className="button explore-cta-secondary" to="/">
                 Tìm hiểu thêm
-              </a>
+              </Link>
             </div>
           </section>
         </div>

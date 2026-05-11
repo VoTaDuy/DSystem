@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
+import { PageTransition } from "../components/common/PageTransition";
 
 const HomePage    = lazy(() => import("../pages/HomePage"));
 const AboutPage   = lazy(() => import("../pages/AboutPage"));
@@ -18,9 +19,11 @@ function PageLoader() {
 }
 
 function AppRoutes() {
+  const location = useLocation();
+
   return (
     <Suspense fallback={<PageLoader />}>
-      <Routes>
+      <Routes location={location}>
         {/* Pages with site Header + Footer */}
         <Route element={<MainLayout />}>
           <Route path="/"        element={<HomePage />} />
@@ -30,8 +33,8 @@ function AppRoutes() {
         </Route>
 
         {/* Auth pages — standalone, no site header/footer */}
-        <Route path="/login"    element={<LoginPage />} />
-        <Route path="/register" element={<SignUpPage />} />
+        <Route path="/login"    element={<PageTransition><LoginPage /></PageTransition>} />
+        <Route path="/register" element={<PageTransition><SignUpPage /></PageTransition>} />
       </Routes>
     </Suspense>
   );

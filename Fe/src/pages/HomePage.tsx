@@ -262,7 +262,7 @@ const HomePage: React.FC = () => {
               </div>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
-              <a href="#cta">Tìm hiểu thêm</a>
+              <Link to="#cta">Tìm hiểu thêm</Link>
             </article>
           ))}
         </div>
